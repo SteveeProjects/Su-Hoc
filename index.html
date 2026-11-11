@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Trắc Nghiệm Phản Xạ - Lịch Sử 10</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --green: #10b981;
+            --green-bg: #d1fae5;
+            --red: #ef4444;
+            --red-bg: #fee2e2;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        /* --- Header & Stats --- */
+        .header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            background-color: #f8fafc;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .stat-value.green { color: var(--green); }
+        .stat-value.red { color: var(--red); }
+        .stat-value.blue { color: var(--primary); }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        /* --- Question Area --- */
+        .content {
+            padding: 24px;
+        }
+
+        .question-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: flex-start;
+            width: 100%;
+            padding: 16px;
+            background-color: #fff;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--primary);
+            background-color: #f8fafc;
+        }
+
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            font-weight: 700;
+            margin-right: 12px;
+            flex-shrink: 0;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        /* --- Feedback States --- */
+        .option-btn.disabled {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .option-btn.correct {
+            background-color: var(--green-bg);
+            border-color: var(--green);
+            color: #065f46;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .option-btn.correct .option-letter {
+            background-color: var(--green);
+            color: white;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--red-bg);
+            border-color: var(--red);
+            color: #991b1b;
+        }
+
+        .option-btn.wrong .option-letter {
+            background-color: var(--red);
+            color: white;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* --- Action Area --- */
+        .actions {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .footer-controls {
+            padding: 16px 24px;
+            background-color: #f8fafc;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header { padding: 16px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .content { padding: 16px; }
+            .question-text { font-size: 16px; }
+            .option-btn { padding: 12px; font-size: 15px; }
+            .footer-controls { flex-direction: column; gap: 12px; }
+            .footer-controls .btn { width: 100%; }
+            .actions { flex-direction: column; }
+            .actions .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header & Stats -->
+        <div class="header">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Câu hỏi</div>
+                    <div class="stat-value" id="stat-progress">0/60</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Đúng</div>
+                    <div class="stat-value green" id="stat-correct">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Sai</div>
+                    <div class="stat-value red" id="stat-wrong">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Tỷ lệ đúng</div>
+                    <div class="stat-value blue" id="stat-score">0%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Question Area -->
+        <div class="content">
+            <div class="question-number" id="question-number">Câu 1 / 60</div>
+            <div class="question-text" id="question-text">Đang tải câu hỏi...</div>
+            
+            <div class="options-list" id="options-container">
+                <!-- Options will be rendered here by JS -->
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" id="btn-next" style="display: none;" onclick="nextQuestion()">Câu tiếp theo &rarr;</button>
+            </div>
+        </div>
+
+        <!-- Footer Controls -->
+        <div class="footer-controls">
+            <button class="btn btn-secondary" onclick="resetQuiz()">↺ Làm lại từ đầu</button>
+            <button class="btn btn-secondary" onclick="shuffleQuiz()">🔀 Xáo trộn câu hỏi</button>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu câu hỏi (Đã trích xuất từ ảnh)
+        const quizData = [
+            // --- BÀI 1 (35 CÂU) ---
+            {
+                question: "Lịch sử được hiểu theo những nghĩa nào sau đây?",
+                options: [
+                    "A. Hiện thực lịch sử và tái hiện lịch sử",
+                    "B. Hiện thực lịch sử và nhận thức lịch sử",
+                    "C. Tái hiện lịch sử và học tập lịch sử",
+                    "D. Nhận thức lịch sử và hiểu biết lịch sử"
+                ],
+                correct: 1
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh không đúng về lịch sử được con người nhận thức?",
+                options: [
+                    "A. Được trình bày, tái hiện theo nhiều cách khác nhau",
+                    "B. Xuất hiện trước hiện thực lịch sử",
+                    "C. Mang ý muốn chủ quan của người tìm hiểu, nghiên cứu",
+                    "D. Mang tính khách quan của hiện thực lịch sử"
+                ],
+                correct: 1
+            },
+            {
+                question: "Nội dung nào sau đây không phản ánh đúng về khái niệm lịch sử?",
+                options: [
+                    "A. Là một khoa học nghiên cứu về quá khứ của con người",
+                    "B. Là những nhận thức, hiểu biết của con người về quá khứ",
+                    "C. Là những gì đã diễn ra trong quá khứ của xã hội loài người",
+                    "D. Là sự tưởng tượng của con người về sự việc sắp diễn ra"
+                ],
+                correct: 3
+            },
+            {
+                question: "Lịch sử được con người nhận thức được trình bày, tái hiện theo nhiều cách khác nhau, ngoại trừ nội dung nào sau đây?",
+                options: [
+                    "A. Thực hành nghi lễ, phong tục",
+                    "B. Lập đài tưởng niệm, ghi chép",
+                    "C. Sáng tạo, dự báo sự kiện",
+                    "D. Kể chuyện, nghiên cứu"
+                ],
+                correct: 2
+            },
+            {
+                question: "Một trong những yếu tố góp phần tạo nên “khoảng cách” giữa hiện thực lịch sử và lịch sử được con người nhận thức là",
+                options: [
+                    "A. Hiện thực lịch sử phụ thuộc vào nhu cầu, năng lực, đạo đức, thế giới quan của người nghiên cứu lịch sử",
+                    "B. Lịch sử được con người nhận thức không thể thay đổi, hiện thực lịch sử luôn biến đổi theo thời gian",
+                    "C. Hiện thực lịch sử phụ thuộc hoàn toàn vào ý muốn chủ quan và khả năng nhận thức của con người",
+                    "D. Con người không thể nhận thức và tái hiện hoàn toàn đầy đủ hiện thực lịch sử như nó đã xảy ra"
+                ],
+                correct: 3
+            },
+            {
+                question: "Nội dung nào sau đây là lịch sử được con người nhận thức?",
+                options: [
+                    "A. Ngày 30-4-1975, chiếc xe tăng số hiệu 846 do trưởng xe Nguyễn Quang Hòa tiến vào Dinh Độc Lập",
+                    "B. Mỹ ném bom nguyên tử xuống Nhật Bản làm hạn chế thiệt hại sinh mạng cho các bên tham chiến",
+                    "C. Chủ tịch Hồ Chí Minh đọc bản Tuyên ngôn độc lập tại Quảng trường Ba Đình, Hà Nội (2-9-1945)",
+                    "D. Ngày 7-5-1954, Quân đội nhân dân Việt Nam đánh chiếm Sở chỉ huy tập đoàn cứ điểm Điện Biên Phủ"
+                ],
+                correct: 1
+            },
+            {
+                question: "Khái niệm nào sau đây là đúng về Sử học?",
+                options: [
+                    "A. Sử học là khoa học nghiên cứu về hoạt động của con người trong hiện tại",
+                    "B. Sử học là khoa học nghiên cứu về quá khứ của con người",
+                    "C. Sử học là khoa học nghiên cứu về sự tiến hóa của con người",
+                    "D. Sử học là khoa học nghiên cứu riêng về văn hóa của con người"
+                ],
+                correct: 1
+            },
+            {
+                question: "Nội dung nào sau đây là đối tượng nghiên cứu của Sử học?",
+                options: [
+                    "A. Chỉ các cá nhân và tổ chức",
+                    "B. Chỉ các quốc gia và dân tộc",
+                    "C. Một cá nhân, một nhóm, một cộng đồng, một quốc gia, một khu vực và toàn nhân loại",
+                    "D. Chỉ các cộng đồng và khu vực"
+                ],
+                correct: 2
+            },
+            {
+                question: "Mối quan hệ giữa chức năng khoa học và chức năng xã hội của Sử học được thể hiện đúng nhất qua nhận định nào sau đây?",
+                options: [
+                    "A. Chức năng khoa học giúp khôi phục quá khứ chân thực, tạo cơ sở để thực hiện chức năng xã hội.",
+                    "B. Chức năng xã hội quan trọng hơn vì lịch sử chỉ có giá trị khi phục vụ lợi ích giai cấp.",
+                    "C. Hai chức năng này tồn tại độc lập, không có sự can thiệp hay hỗ trợ lẫn nhau.",
+                    "D. Chức năng xã hội là tiên đề, quyết định mức độ chính xác của chức năng khoa học."
+                ],
+                correct: 0
+            },
+            {
+                question: "Nội dung nào sau đây không phản ánh đúng đặc điểm của hiện thực lịch sử?",
+                options: [
+                    "A. Có tính duy nhất và không thể thay đổi được",
+                    "B. Tồn tại một cách khách quan",
+                    "C. Được trình bày, tái hiện theo nhiều cách khác nhau",
+                    "D. Không phụ thuộc vào ý muốn của con người"
+                ],
+                correct: 2
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh đúng về nhiệm vụ giáo dục, nêu gương của Sử học?",
+                options: [
+                    "A. Giáo dục và nêu gương",
+                    "B. Phục vụ cuộc sống hiện tại thông qua những bài học kinh nghiệm",
+                    "C. Cung cấp những tri thức khoa học về lịch sử",
+                    "D. Khôi phục hiện thực lịch sử một cách chính xác, khách quan"
+                ],
+                correct: 0
+            },
+            {
+                question: "“Khôi phục lại hiện thực lịch sử một cách chính xác, khách quan” là chức năng nào sau đây của Sử học?",
+                options: [
+                    "A. Xã hội",
+                    "B. Dự báo",
+                    "C. Khoa học",
+                    "D. Giáo dục"
+                ],
+                correct: 2
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh đúng về sự khác biệt giữa hiện thực lịch sử và lịch sử được con người nhận thức?",
+                options: [
+                    "A. Không chịu ảnh hưởng của cách tiếp cận và phương pháp nghiên cứu",
+                    "B. Luôn phản ánh đầy đủ và nguyên vẹn hiện thực lịch sử",
+                    "C. Tồn tại độc lập, khách quan với hiện thực lịch sử",
+                    "D. Không thể tái hiện đầy đủ hiện thực lịch sử"
+                ],
+                correct: 3
+            },
+            {
+                question: "Đối tượng nghiên cứu của Sử học mang đặc điểm nào sau đây?",
+                options: [
+                    "A. Toàn diện",
+                    "B. Tâm linh",
+                    "C. Phổ cập",
+                    "D. Hiện đại"
+                ],
+                correct: 0
+            },
+            {
+                question: "Nội dung nào sau đây là nhiệm vụ của Sử học?",
+                options: [
+                    "A. Khoa học",
+                    "B. Giáo dục",
+                    "C. Dự báo",
+                    "D. Nhận thức"
+                ],
+                correct: 3
+            },
+            {
+                question: "Việc nhận thức không đúng đối tượng, chức năng và nhiệm vụ cơ bản của Sử học dẫn đến tác động nào sau đây?",
+                options: [
+                    "A. Gây sai lệch trong quá trình nghiên cứu và phục dựng quá khứ lịch sử.",
+                    "B. Khiến việc nghiên cứu lịch sử không cần dựa vào nguồn sử liệu.",
+                    "C. Làm cho lịch sử được con người nhận thức luôn trùng khớp hoàn toàn với hiện thực lịch sử.",
+                    "D. Làm thay đổi những sự kiện lịch sử đã thực sự diễn ra trong quá khứ."
+                ],
+                correct: 0
+            },
+            {
+                question: "Rút ra bản chất của các quá trình lịch sử để phát hiện quy luật vận động và phát triển của lịch sử là chức năng nào sau đây của Sử học?",
+                options: [
+                    "A. Dự báo",
+                    "B. Giáo dục",
+                    "C. Khoa học",
+                    "D. Xã hội"
+                ],
+                correct: 2
+            },
+            {
+                question: "Nội dung nào dưới đây phản ánh đúng lịch sử được con người nhận thức?",
+                options: [
+                    "A. Tượng vua Quang Trung tại Bảo tàng Quang Trung, nay thuộc tỉnh Gia Lai",
+                    "B. Răng hóa thạch của Người tối cổ được tìm thấy ở hang Thẩm Khuyên, Lạng Sơn",
+                    "C. Ngôi ủp nóc mái gắn lá đề trang trí hình chim phượng ở Hoàng thành Thăng Long",
+                    "D. Cột khói tạo bởi bom nguyên tử do quân đội Mỹ ném xuống Hi-rô-si-ma, Nhật Bản (1945)"
+                ],
+                correct: 0
+            },
+            {
+                question: "Khôi phục các sự kiện lịch sử diễn ra trong quá khứ là chức năng nào của Sử học?",
+                options: [
+                    "A. Phục dựng",
+                    "B. Khoa học",
+                    "C. Nhận biết",
+                    "D. Tái hiện"
+                ],
+                correct: 1
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh đúng về nhiệm vụ cung cấp tri thức khoa học lịch sử của Sử học?",
+                options: [
+                    "A. Phục vụ cuộc sống hiện tại thông qua những bài học kinh nghiệm",
+                    "B. Khôi phục hiện thực lịch sử một cách chính xác, khách quan",
+                    "C. Cung cấp những tri thức khoa học về lịch sử",
+                    "D. Giáo dục và nêu gương"
+                ],
+                correct: 2
+            },
+            {
+                question: "Nội dung nào sau đây là lịch sử được con người nhận thức?",
+                options: [
+                    "A. Cầu Long Biên ở Hà Nội",
+                    "B. Dấu tích bãi cọc Bạch Đằng năm 1288 ở Hải Phòng",
+                    "C. Bom nguyên tử do quân đội Mỹ ném xuống Hi-rô-si-ma, Nhật Bản",
+                    "D. Bộ phim Hoàng hậu cuối cùng của đạo diễn Bảo Nhân và Namcito"
+                ],
+                correct: 3
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh không đúng một trong những nhiệm vụ của Sử học?",
+                options: [
+                    "A. Góp phần truyền bá những giá trị và truyền thống tốt đẹp trong lịch sử dân tộc cho thế hệ sau",
+                    "B. Thông qua việc tổng kết thực tiễn, góp phần dự báo về tương lai của đất nước, nhân loại",
+                    "C. Cung cấp tri thức khoa học, giúp con người tìm hiểu, khám phá hiện thực lịch sử khách quan",
+                    "D. Rút ra bản chất của các quá trình lịch sử để phát hiện quy luật phát triển của lịch sử"
+                ],
+                correct: 3
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh đúng về mối quan hệ giữa hiện thực lịch sử và lịch sử được con người nhận thức?",
+                options: [
+                    "A. Hiện thực lịch sử có trước, lịch sử được con người nhận thức có sau",
+                    "B. Lịch sử được con người nhận thức có trước hiện thực lịch sử",
+                    "C. Hiện thực lịch sử chỉ xuất hiện sau khi được con người ghi chép",
+                    "D. Hai loại lịch sử xuất hiện đồng thời và không có sự khác biệt"
+                ],
+                correct: 0
+            },
+            {
+                question: "Nhiệm vụ nhận thức của Sử học được thể hiện ở nội dung nào sau đây?",
+                options: [
+                    "A. Cung cấp các tri thức khoa học về lịch sử",
+                    "B. Bồi đắp lòng yêu nước, tinh thần tự tôn dân tộc",
+                    "C. Giáo dục tư tưởng, tình cảm cho con người",
+                    "D. Dự báo về tương lai của đất nước, nhân loại"
+                ],
+                correct: 0
+            },
+            {
+                question: "Ngày 6 và ngày 9-8-1945, Mỹ ném bom nguyên tử xuống thành phố Hi-rô-si-ma và Na-ga-sa-ki (Nhật Bản) là nội dung nào sau đây khái niệm lịch sử?",
+                options: [
+                    "A. Hiện thực lịch sử",
+                    "B. Tri thức lịch sử",
+                    "C. Khoa học lịch sử",
+                    "D. Nhận thức lịch sử"
+                ],
+                correct: 0
+            },
+            {
+                question: "Để Sử học thực sự trở thành một khoa học phải đảm bảo nguyên tắc nào sau đây?",
+                options: [
+                    "A. Khách quan và nghệ thuật",
+                    "B. Chủ quan và khoa học",
+                    "C. Chủ quan và trung thực",
+                    "D. Khách quan và khoa học"
+                ],
+                correct: 3
+            },
+            {
+                question: "Sử học có những chức năng nào sau đây?",
+                options: [
+                    "A. Nhận thức và giáo dục",
+                    "B. Nhận thức và khoa học",
+                    "C. Giáo dục và dự báo",
+                    "D. Khoa học và xã hội"
+                ],
+                correct: 3
+            },
+            {
+                question: "Yếu tố nào sau đây không tác động đến lịch sử được con người nhận thức?",
+                options: [
+                    "A. Mục đích tìm hiểu, nghiên cứu",
+                    "B. Những dự báo về tương lai",
+                    "C. Mức độ phong phú và xác thực của thông tin sử liệu",
+                    "D. Năng lực của người tìm hiểu lịch sử"
+                ],
+                correct: 1
+            },
+            {
+                question: "Nội dung nào sau đây là đối tượng nghiên cứu của Sử học?",
+                options: [
+                    "A. Chiến dịch Điện Biên Phủ",
+                    "B. Tính chất của nước",
+                    "C. Vòng đời của cây dâu",
+                    "D. Tập tính của loài khỉ"
+                ],
+                correct: 0
+            },
+            {
+                question: "Đối tượng nghiên cứu của Sử học liên quan đến những hoạt động nào của con người?",
+                options: [
+                    "A. Chỉ kinh tế, xã hội và văn hoá",
+                    "B. Chỉ giáo dục và khoa học",
+                    "C. Chỉ chính trị, quân sự và ngoại giao",
+                    "D. Chính trị, ngoại giao, quân sự, kinh tế, xã hội, văn hoá, giáo dục, khoa học"
+                ],
+                correct: 3
+            },
+            {
+                question: "“Giúp con người hiểu được các quy luật phát triển của xã hội, rút ra những bài học kinh nghiệm cho cuộc sống hiện tại” là chức năng nào sau đây của Sử học?",
+                options: [
+                    "A. Xã hội",
+                    "B. Khoa học",
+                    "C. Giáo dục",
+                    "D. Dự báo"
+                ],
+                correct: 0
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh đúng về đối tượng nghiên cứu của Sử học?",
+                options: [
+                    "A. Những hoạt động của con người trên lĩnh vực chính trị, quân sự",
+                    "B. Những hoạt động của con người từ khi xuất hiện chữ viết đến nay",
+                    "C. Toàn bộ những hoạt động của con người diễn ra trong quá khứ",
+                    "D. Toàn bộ những hoạt động của con người từ thời cổ đại đến cận đại"
+                ],
+                correct: 2
+            },
+            {
+                question: "Nội dung nào sau đây là hiện thực lịch sử?",
+                options: [
+                    "A. Chủ tịch Hồ Chí Minh đọc bản Tuyên ngôn Độc lập tại Quảng trường Ba Đình, Hà Nội (ngày 2-9-1945)",
+                    "B. Mô hình phục dựng bếp lửa và sinh hoạt của con người trong văn hóa Hòa Bình",
+                    "C. Quân đội Mỹ ném bom nguyên tử làm hạn chế thiệt hại sinh mạng cho các bên tham chiến",
+                    "D. Sự sụp đổ của phát xít Nhật tại Đông Dương tạo ra một “khoảng trống quyền lực” lớn"
+                ],
+                correct: 0
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh đúng đối tượng nghiên cứu của Sử học?",
+                options: [
+                    "A. Toàn bộ quá khứ của loài người",
+                    "B. Quá trình tiến hóa của loài người",
+                    "C. Quá trình tiến hóa của loài người",
+                    "D. Những hoạt động của loài người"
+                ],
+                correct: 0
+            },
+            {
+                question: "Nội dung nào sau đây là hiện thực lịch sử?",
+                options: [
+                    "A. Tác phẩm Lá cờ thêu sáu chữ vàng của Nguyễn Huy Tưởng",
+                    "B. Năm 1288, nhà Trần đánh bại quân Mông Nguyên",
+                    "C. Tác phẩm Đức Thánh Trần của Trần Thanh Cảnh",
+                    "D. Phim Mưa đỏ của đạo diễn Đặng Thái Huyền"
+                ],
+                correct: 1
+            },
+
+            // --- BÀI 2 & BÀI 4 (25 CÂU) ---
+            {
+                question: "Việc tìm hiểu, học tập lịch sử không chỉ diễn ra thông qua các bài học trên lớp mà còn bằng hình thức phổ biến nào sau đây?",
+                options: [
+                    "A. Nghiên cứu độc lập tại các phòng thí nghiệm.",
+                    "B. Chỉ học qua các bài giảng truyền trên mạng.",
+                    "C. Chỉ thông qua việc đọc sách giáo khoa lịch sử.",
+                    "D. Tham quan di tích, bảo tàng lịch sử văn hoá."
+                ],
+                correct: 3
+            },
+            {
+                question: "Việc nhiều sự kiện, quá trình lịch sử vẫn còn là bí ẩn cho đến nay mang lại tác động tích cực nào?",
+                options: [
+                    "A. Tạo ra sự hoang mang, mất niềm tin vào lịch sử dân tộc.",
+                    "B. Gây khó khăn cho việc biên soạn sách giáo khoa lịch sử.",
+                    "C. Khẳng định giới hạn nhận thức tuyệt đối của con người.",
+                    "D. Thôi thúc thế hệ sau tìm tòi, hoàn chỉnh nhận thức chung"
+                ],
+                correct: 3
+            },
+            {
+                question: "Nội dung nào sau đây không phản ánh đúng lý do cần thiết phải học tập, khám phá lịch sử suốt đời?",
+                options: [
+                    "A. Học tập lịch sử là cách duy nhất để hội nhập quốc tế thành công",
+                    "B. Nhiều sự kiện lịch sử trong quá khứ chưa được làm sáng tỏ",
+                    "C. Tri thức lịch sử có sự biến đổi và phát triển không ngừng",
+                    "D. Nhu cầu đúc rút kinh nghiệm quá khứ cho cuộc sống hiện tại"
+                ],
+                correct: 0
+            },
+            {
+                question: "Mục đích quan trọng nhất của quá trình xử lí (phân loại, đánh giá, thẩm định) thông tin sử liệu là gì?",
+                options: [
+                    "A. Liệt kê toàn bộ danh mục các nguồn sử liệu đã được tìm thấy.",
+                    "B. Xác định tính xác thực, độ tin cậy và giá trị của sử liệu.",
+                    "C. Đảm bảo số lượng sử liệu thu thập được càng nhiều càng tốt.",
+                    "D. Tìm kiếm thêm những thông tin mới chưa từng được công bố."
+                ],
+                correct: 1
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh đúng điểm tương đồng giữa văn hóa và văn minh?",
+                options: [
+                    "A. Đều tạo ra đặc tính, bản sắc của xã hội",
+                    "B. Đều là những giá trị vật chất và tinh thần do con người sáng tạo nên.",
+                    "C. Đều được con người sáng tạo trong thời kì phát triển cao của xã hội.",
+                    "D. Đều xuất hiện đồng thời với sự xuất hiện của loài người."
+                ],
+                correct: 1
+            },
+            {
+                question: "Nội dung nào sau đây là một trong những lí do cần thiết phải học tập lịch sử suốt đời?",
+                options: [
+                    "A. Nhận thức lịch sử luôn trùng khớp hiện thực lịch sử.",
+                    "B. Lịch sử chỉ xuất hiện một lần và không lặp lại",
+                    "C. Hiện thực lịch sử là duy nhất và không thay đổi.",
+                    "D. Nhiều sự kiện, quá trình lịch sử hiện nay còn là bí ẩn."
+                ],
+                correct: 3
+            },
+            {
+                question: "Thu thập sử liệu là quá trình",
+                options: [
+                    "A. Tìm kiếm, sưu tầm, tập hợp những thông tin liên quan đến đối tượng nghiên cứu của Sử học.",
+                    "B. đánh giá, thẩm định các nguồn sử liệu để phục vụ cho việc tìm hiểu, nghiên cứu lịch sử.",
+                    "C. chọn lọc, phân loại các nguồn sử liệu để phục vụ cho việc tìm hiểu, nghiên cứu lịch sử.",
+                    "D. xác minh độ tin cậy các nguồn sử liệu để phục vụ cho việc tìm hiểu, nghiên cứu lịch sử."
+                ],
+                correct: 0
+            },
+            {
+                question: "Nhiệm vụ xử lý thông tin sử liệu nhằm mục đích nào sau đây?",
+                options: [
+                    "A. Xác thực mối quan hệ giữa hiện thực lịch sử và lịch sử được con người nhận thức.",
+                    "B. Xác định tính xác thực, độ tin cậy, giá trị của sử liệu, thông tin mà sử liệu đó phản ánh.",
+                    "C. Khảo sát và sưu tầm những nguồn sử liệu liên quan đến đối tượng nghiên cứu.",
+                    "D. Tìm kiếm và tập hợp những thông tin liên quan đến các sự kiện, hiện tượng lịch sử."
+                ],
+                correct: 1
+            },
+            {
+                question: "Nhận định nào sau đây không đúng về sự cần thiết của việc học tập, khám phá lịch sử suốt đời?",
+                options: [
+                    "A. Nhận thức của con người về các sự kiện, hiện tượng lịch sử có thể thay đổi.",
+                    "B. Nguồn sử liệu mới được phát hiện có thể bổ sung những hiểu biết về quá khứ.",
+                    "C. Nhận thức lịch sử chỉ phụ thuộc vào nội dung của vấn đề được nghiên cứu.",
+                    "D. Tri thức lịch sử luôn được bổ sung và phát triển cùng với quá trình nghiên cứu."
+                ],
+                correct: 2
+            },
+            {
+                question: "Việc học tập lịch sử suốt đời đem lại lợi ích nào sau đây?",
+                options: [
+                    "A. Giúp con người phát triển toàn diện về mặt thể chất.",
+                    "B. Giúp con người mở rộng và cập nhật vốn kiến thức.",
+                    "C. Tách rời lịch sử với cuộc sống của con người.",
+                    "D. Thay đổi và làm phong phú thêm hiện thực lịch sử."
+                ],
+                correct: 1
+            },
+            {
+                question: "Trong quá trình tìm hiểu, nghiên cứu lịch sử, việc xác minh, đánh giá nguồn sử liệu là một khâu quan trọng nhằm mục đích nào sau đây?",
+                options: [
+                    "A. Xác định độ tin cậy và giá trị của các nguồn sử liệu",
+                    "B. Xác định danh sách các nguồn sử liệu cần thu thập.",
+                    "C. Ghi chép thông tin liên quan đến vấn đề nghiên cứu",
+                    "D. Chọn lọc và phân loại các nguồn sử liệu phù hợp."
+                ],
+                correct: 0
+            },
+            {
+                question: "Toàn bộ những hình thức khác nhau của tư liệu lịch sử, chứa đựng thông tin về quá khứ của loài người được gọi là",
+                options: [
+                    "A. khoa học lịch sử.",
+                    "B. tri thức lịch sử.",
+                    "C. sử liệu.",
+                    "D. bảo tàng lịch sử."
+                ],
+                correct: 2
+            },
+            {
+                question: "Nhiệm vụ cơ bản của công tác chuẩn bị sử liệu là",
+                options: [
+                    "A. lập danh mục sử liệu cần thu thập.",
+                    "B. xác minh nguồn gốc nguồn sử liệu.",
+                    "C. xác định vấn đề cần tìm hiểu.",
+                    "D. thu thập và xử lí thông tin sử liệu."
+                ],
+                correct: 3
+            },
+            {
+                question: "Toàn bộ những hình thức khác nhau của tư liệu lịch sử, chứa đựng thông tin về quá khứ được gọi là gì?",
+                options: [
+                    "A. Sử học.",
+                    "B. Sử sách.",
+                    "C. Sử liệu.",
+                    "D. Sử thi."
+                ],
+                correct: 2
+            },
+            {
+                question: "Nơi lưu giữ tập trung nhất các nguồn sử liệu của hiện thực lịch sử là",
+                options: [
+                    "A. trường học.",
+                    "B. tác phẩm văn học theo chủ đề lịch sử.",
+                    "C. di tích lịch sử - văn hóa.",
+                    "D. bảo tàng."
+                ],
+                correct: 3
+            },
+            {
+                question: "Hai nhiệm vụ cơ bản trong công đoạn chuẩn bị sử liệu để khám phá, học tập lịch sử là gì?",
+                options: [
+                    "A. Sưu tầm, thu thập và xử lí thông tin sử liệu.",
+                    "B. Trưng bày hiện vật và tổ chức các hội thảo.",
+                    "C. Xuất bản sách và báo cáo kết quả nghiên cứu.",
+                    "D. Phỏng vấn nhân chứng và ghi hình hiện trường."
+                ],
+                correct: 0
+            },
+            {
+                question: "Chữ San-xcrít (chữ Phạn) của người Ấn Độ cổ - trung đại được sáng tạo trên cơ sở cải biến hệ thống chữ viết nào sau đây?",
+                options: [
+                    "A. Chữ cái Latinh và chữ cái Phê-ni-xi.",
+                    "B. Chữ Rô-ma và chữ số La Mã.",
+                    "C. Chữ Hán và chữ Quốc ngữ.",
+                    "D. Chữ Kha-rốt-thi và chữ Bra-mi."
+                ],
+                correct: 3
+            },
+            {
+                question: "Nội dung nào sau đây không phản ánh đúng về khái niệm văn minh?",
+                options: [
+                    "A. Trạng thái phát triển cao của nền văn hóa.",
+                    "B. Khi xã hội loài người vượt qua trình độ thời kì dã man.",
+                    "C. Tạo ra đặc tính, bản sắc của xã hội.",
+                    "D. Sự tiến bộ về vật chất và tinh thần."
+                ],
+                correct: 2
+            },
+            {
+                question: "Việc đẩy mạnh học lịch sử dân tộc ở trường phổ thông có ý nghĩa nào sau đây?",
+                options: [
+                    "A. Góp phần hình thành lòng yêu nước và niềm tự hào dân tộc.",
+                    "B. Tạo cơ sở để học hỏi, giao lưu và hội nhập quốc tế.",
+                    "C. Giúp mỗi dân tộc nhận thức về bản thân trong quan hệ quốc tế.",
+                    "D. Tạo điểm tựa để củng cố niềm tin vào sức mạnh của dân tộc."
+                ],
+                correct: 0
+            },
+            {
+                question: "Việc tìm hiểu, khám phá lịch sử cần phải dựa vào yếu tố tiên quyết nào sau đây?",
+                options: [
+                    "A. Phương pháp nghiên cứu.",
+                    "B. Nhà nghiên cứu sử học.",
+                    "C. Nguồn sử liệu.",
+                    "D. Nhu cầu tìm hiểu lịch sử."
+                ],
+                correct: 2
+            },
+            {
+                question: "Để tìm hiểu và nghiên cứu về lịch sử, con người phải dựa trên",
+                options: [
+                    "A. chuyên môn của nhà Sử học.",
+                    "B. kinh nghiệm dân gian.",
+                    "C. ý kiến của cộng đồng.",
+                    "D. nguồn sử liệu tin cậy."
+                ],
+                correct: 3
+            },
+            {
+                question: "Những tri thức lịch sử được con người nhận thức thể hiện dưới dạng nào sau đây?",
+                options: [
+                    "A. Kĩ năng, kinh nghiệm, niềm tin, bí quyết.",
+                    "B. Tác phẩm sử học, bí quyết, kĩ năng thực hành.",
+                    "C. Sách, báo, băng ghi âm, bí quyết.",
+                    "D. Văn bản, tác phẩm sử học, kết quả nghiên cứu."
+                ],
+                correct: 3
+            },
+            {
+                question: "Quá trình xử lý thông tin sử liệu được tiến hành nhằm mục đích nào sau đây?",
+                options: [
+                    "A. Tìm kiếm, tập hợp những thông tin liên quan đến các sự kiện, hiện tượng lịch sử.",
+                    "B. Xác định tính xác thực, giá trị của sử liệu và thông tin mà sử liệu đó phản ánh.",
+                    "C. Xác thực mối quan hệ giữa hiện thực lịch sử và lịch sử được con người nhận thức.",
+                    "D. Khảo sát và sưu tầm những nguồn sử liệu liên quan đến đối tượng nghiên cứu."
+                ],
+                correct: 1
+            },
+            {
+                question: "Tác phẩm điêu khắc tiêu biểu nào dưới đây không phải là thành tựu của văn minh Ai Cập thời cổ đại?",
+                options: [
+                    "A. Kim tự tháp Kê-ốp ở Ghi-da.",
+                    "B. Tượng Nhân sư ở Ghi-da.",
+                    "C. Tượng bán thân Nê-phéc-ti-ti.",
+                    "D. Nắp quan tài bằng vàng của pha-ra-ông Tu-tan-kha-mun."
+                ],
+                correct: 0
+            },
+            {
+                question: "Nội dung nào sau đây phản ánh đúng về khái niệm văn minh?",
+                options: [
+                    "A. Văn minh là sự phát triển rất cao về giáo dục và văn hóa.",
+                    "B. Văn minh là sự đi đầu của cuộc cách mạng khoa học công nghệ.",
+                    "C. Văn minh là sự tiến bộ về vật chất và tinh thần.",
+                    "D. Văn minh là sự chuyển hóa thành công từ vượn thành người."
+                ],
+                correct: 2
+            }
+        ];
+
+        // --- Trạng thái bài thi ---
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let wrongCount = 0;
+        let isAnswered = false;
+
+        // DOM Elements
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const btnNext = document.getElementById('btn-next');
+        const statProgress = document.getElementById('stat-progress');
+        const statCorrect = document.getElementById('stat-correct');
+        const statWrong = document.getElementById('stat-wrong');
+        const statScore = document.getElementById('stat-score');
+        const progressBar = document.getElementById('progress-bar');
+
+        // Khởi tạo bài thi
+        function initQuiz() {
+            currentQuestions = [...quizData];
+            currentIndex = 0;
+            score = 0;
+            wrongCount = 0;
+            updateStats();
+            loadQuestion();
+        }
+
+        // Tải câu hỏi hiện tại lên giao diện
+        function loadQuestion() {
+            if (currentIndex >= currentQuestions.length) {
+                showResults();
+                return;
+            }
+
+            isAnswered = false;
+            btnNext.style.display = 'none';
+            
+            const q = currentQuestions[currentIndex];
+            
+            // Cập nhật thông tin câu hỏi
+            questionNumberEl.textContent = `Câu ${currentIndex + 1} / ${currentQuestions.length}`;
+            questionTextEl.textContent = q.question;
+            
+            // Xóa các đáp án cũ
+            optionsContainer.innerHTML = '';
+            
+            // Render đáp án
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <span class="option-letter">${letters[index]}</span>
+                    <span class="option-text">${opt}</span>
+                `;
+                btn.onclick = () => selectAnswer(index, btn, q.correct);
+                optionsContainer.appendChild(btn);
+            });
+
+            updateProgressBar();
+        }
+
+        // Xử lý khi người dùng chọn đáp án
+        function selectAnswer(selectedIndex, selectedBtn, correctIndex) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const allBtns = optionsContainer.querySelectorAll('.option-btn');
+            
+            // Khóa tất cả các nút
+            allBtns.forEach(btn => btn.classList.add('disabled'));
+
+            if (selectedIndex === correctIndex) {
+                // Chọn đúng
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                // Chọn sai
+                selectedBtn.classList.add('wrong');
+                // Hiển thị đáp án đúng
+                allBtns[correctIndex].classList.add('correct');
+                wrongCount++;
+            }
+
+            updateStats();
+            btnNext.style.display = 'block';
+        }
+
+        // Chuyển sang câu tiếp theo
+        function nextQuestion() {
+            currentIndex++;
+            loadQuestion();
+        }
+
+        // Cập nhật thanh tiến độ và các chỉ số
+        function updateStats() {
+            statCorrect.textContent = score;
+            statWrong.textContent = wrongCount;
+            
+            const totalDone = score + wrongCount;
+            statProgress.textContent = `${totalDone}/${currentQuestions.length}`;
+            
+            let percentage = 0;
+            if (totalDone > 0) {
+                percentage = Math.round((score / totalDone) * 100);
+            }
+            statScore.textContent = `${percentage}%`;
+        }
+
+        function updateProgressBar() {
+            const totalDone = score + wrongCount;
+            const progressPercent = (totalDone / currentQuestions.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+        }
+
+        // Hiển thị kết quả cuối cùng
+        function showResults() {
+            questionNumberEl.textContent = "Hoàn thành!";
+            questionTextEl.textContent = `Bạn đã hoàn thành bài luyện tập. Kết quả: ${score}/${currentQuestions.length} câu đúng.`;
+            optionsContainer.innerHTML = '';
+            btnNext.style.display = 'none';
+            progressBar.style.width = '100%';
+            
+            // Có thể thêm nút làm lại ở đây nếu cần
+        }
+
+        // Làm lại từ đầu (giữ nguyên thứ tự)
+        function resetQuiz() {
+            if(confirm("Bạn có chắc muốn làm lại từ đầu?")) {
+                initQuiz();
+            }
+        }
+
+        // Xáo trộn câu hỏi và làm lại
+        function shuffleQuiz() {
+            if(confirm("Xáo trộn câu hỏi và bắt đầu lại?")) {
+                // Thuật toán Fisher-Yates shuffle
+                for (let i = currentQuestions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [currentQuestions[i], currentQuestions[j]] = [currentQuestions[j], currentQuestions[i]];
+                }
+                currentIndex = 0;
+                score = 0;
+                wrongCount = 0;
+                updateStats();
+                loadQuestion();
+            }
+        }
+
+        // Chạy ứng dụng khi tải trang
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
